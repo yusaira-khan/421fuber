@@ -1,12 +1,14 @@
 CREATE TABLE Ride(
         rid char(9) PRIMARY KEY NOT NULL,
-        startlatitude DOUBLE NOT NULL,
-        startlongitude DOUBLE NOT NULL,
-        destinationlatitude DOUBLE,
-        destinationlongitude DOUBLE,
-        starttime TIMESTAMP NOT NULL,
-        endtime TIMESTAMP,
-        price DOUBLE
+        startLatitude DOUBLE NOT NULL,
+        startLongitude DOUBLE NOT NULL,
+        destinationLatitude DOUBLE,
+        destinationLongitude DOUBLE,
+        startTime TIMESTAMP NOT NULL,
+        endTime TIMESTAMP,
+        price DOUBLE,
+        cid char(9),
+        FOREIGN KEY(cid) REFERENCES Car 
 );
 
 CREATE TABLE Car (
@@ -17,61 +19,62 @@ CREATE TABLE Car (
         class varchar(7) check (class in ('small','big','limo','luxury')) NOT NULL,
         latitude DOUBLE NOT NULL,
         longitude DOUBLE NOT NULL,
-        status varchar(10) check (status in ('busy','available','repairing')) with default 'available' NOT NULL
+        status varchar(10) check (status in ('busy','available')) with default 'available' NOT NULL
 );
 
 CREATE TABLE InsurancePackage (
         ipid char(9) PRIMARY KEY NOT NULL,
-        type varchar(20) NOT NULL,
+        type varchar(7) check (type in ('small','big','limo','luxury')) NOT NULL,
         startDate DATE NOT NULL,
         endDate DATE NOT NULL,
         cost DOUBLE NOT NULL,
-        insuranceCompany varchar(20) NOT NULL
+        insuranceCompany varchar(50) NOT NULL
 );
 
 CREATE TABLE Employee (
         eid char(9) PRIMARY KEY NOT NULL,
         name varchar(50) NOT NULL,
         salary DOUBLE NOT NULL,
-        responsibilities varchar(200)
+        responsibilities varchar(200) NOT NULL
 );
 
 CREATE TABLE Station (
+        sid char(9) PRIMARY KEY NOT NULL,
         latitude DOUBLE NOT NULL,
-        longitude DOUBLE NOT NULL,
-        PRIMARY KEY (latitude, longitude)
+        longitude DOUBLE NOT NULL
 );
 
 CREATE TABLE ParkingStation (
+        sid char(9) PRIMARY KEY NOT NULL,
         latitude DOUBLE NOT NULL,
         longitude DOUBLE NOT NULL,
-        FOREIGN KEY (latitude, longitude) REFERENCES Station,
-        PRIMARY KEY (latitude, longitude)
+        FOREIGN KEY (sid) REFERENCES Station
 );
 
 CREATE TABLE ChargingStation (
+        sid char(9) PRIMARY KEY NOT NULL,
         status varchar(10) check (status in ('busy','available')) with default 'available' NOT NULL,
         latitude DOUBLE NOT NULL,
         longitude DOUBLE NOT NULL,
-        FOREIGN KEY (latitude,longitude) REFERENCES Station,
-        PRIMARY KEY (latitude, longitude)
+        FOREIGN KEY (sid) REFERENCES Station
 );
 
 CREATE TABLE ParkingSpot (
-        pNumber INTEGER NOT NULL,
-        class varchar(7) check (class in ('small','big','limo','luxury')),
-        latitude DOUBLE NOT NULL,
-        longitude DOUBLE NOT NULL,
-        FOREIGN KEY (latitude, longitude) REFERENCES ParkingStation,
-        PRIMARY KEY (latitude, longitude, pNumber)
+        pNumber char(7) NOT NULL,
+        class varchar(7) check (class in ('small','big','limo','luxury')) NOT NULL,
+        sid char(9) NOT NULL,
+        status varchar(10) check (status in ('busy','available')) with default 'available' NOT NULL,
+        FOREIGN KEY (sid) REFERENCES ParkingStation,
+        PRIMARY KEY (sid, pNumber)
 );
 
 CREATE TABLE CreditCard (
-        ccNumber INTEGER PRIMARY KEY NOT NULL,
+        ccNumber char(16) PRIMARY KEY NOT NULL,
         expirationDate DATE NOT NULL,
         CVV SMALLINT NOT NULL,
         cardHolderName varchar(50) NOT NULl,
-        billingAddress varchar(100) NOT NULL
+        billingAddress varchar(100) NOT NULL,
+        validity varchar(8) check (validity in ('valid','invalid')) with default 'valid'
 );
 
 CREATE TABLE Subscription (
@@ -87,9 +90,13 @@ CREATE TABLE Subscription (
 CREATE TABLE User (
         uid char(9) PRIMARY KEY NOT NULL,
         name varchar(50) NOT NULL,
-        email varchar(100) NOT NULL UNIQUE,
-        profilePicture BLOB,
+        email varchar(10)0 NOT NULL UNIQUE,
         ccNumber INTEGER NOT NULL,
         FOREIGN KEY (ccNumber) REFERENCES CreditCard
 );
 
+CREATE TABLE CarInfo (
+        class varchar(7) PRIMARY KEY check (class in ('small','big','limo','luxury')) NOT NULL,
+        basePrice DOUBLE check (basePrice > 0)
+        duration TIME check (duration > 0)
+);
