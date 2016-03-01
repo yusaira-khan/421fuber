@@ -12,20 +12,34 @@ from Car c cross join ChargingStation h
 where h.status='available' and c.status='available'
  group by c.chargePercentage,m.dist,c.cid,h.sid
 
-order by c.chargePercentage, m.dist
-;
+order by c.chargePercentage, m.dist fetch first 1 row only;
 
 --getting a parking spot
-select c.cid, spot.latitude, spot.longitude, spot.pNumber,
+select c.cid, spot.latitude, spot.longitude, spot.pNumber
+from Car c inner join ( select 
 HAVERSINE(c.latitude,c.longitude,spot.latitude,spot.longitude) as dist,
- min(dist) into min_dist
  from Car c inner join ParkingSpot spot on spot.class=c.class
  inner join park_At p on spot.latitude=p.latitude and spot.longitude=p.longitude
  and spot.pNumber=p.pNumber  where
 dist=min_dist and
 p.cid=null  --car not currently parked
 and c.status!='busy' ; --car either available or needs repairing
+select c.cid, spot.sid,spot.number 
+from Car c inner join ( select 
+HAVERSINE(c.latitude,c.longitude,h.latitude,h.longitude) as dist
+c.cid as cid,
+p.pNumber as hid,
+h.sid as hid,
+from Car c inner join ParkingSpot p  on p.class=c.class inner join Station h
+group by c.latitude,c.longitude,h.latitude,h.longitude,c.cid,h.sid,p.pNumber
+) m on m.cid = c.cid
+inner join ChargingStation h on m.sid = h.sid
+from Car c cross join ChargingStation h
+where h.status='available' and c.status='available'
+ group by c.chargePercentage,m.dist,c.cid,h.sid
 
+order by c.chargePercentage, m.dist
+;
 
 --getting insurance information about a car that needs repairing
 select c.cid, park.latitude, park.longitude, em.eid, ins.ipid

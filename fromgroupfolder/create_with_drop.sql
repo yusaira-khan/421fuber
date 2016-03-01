@@ -1,15 +1,12 @@
-Drop TABLE Ride;
-CREATE TABLE Ride(
-        rid  integer  PRIMARY KEY  not null GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
-        startLatitude DOUBLE NOT NULL,
-        startLongitude DOUBLE NOT NULL,
-        destinationLatitude DOUBLE,
-        destinationLongitude DOUBLE,
-        startTime TIMESTAMP,
-        endTime TIMESTAMP,
-        price DOUBLE,
-        cid integer,
-        FOREIGN KEY(cid) REFERENCES Car 
+--Drop TABLE Ride;
+Drop TABLE ClassInfo; 
+Drop TABLE CarClassInfo; 
+CREATE TABLE CarClassInfo (
+        class varchar(7) PRIMARY KEY check (class in ('small','big','limo','luxury')) NOT NULL,
+        basePrice DOUBLE check (basePrice > 0),
+        kmPrice Double check (kmPrice > 0),
+        minutePrice Double check (minutePrice > 0),
+        duration TIME not null
 );
 Drop TABLE Car ;
 CREATE TABLE Car (
@@ -23,6 +20,20 @@ CREATE TABLE Car (
         status varchar(10) check (status in ('busy','available','repairing')) with default 'available' NOT NULL,
         FOREIGN Key(class ) REFERENCES CarClassInfo
 );
+Drop TABLE Ride ;
+CREATE TABLE Ride(
+        rid  integer  PRIMARY KEY  not null GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
+        startLatitude DOUBLE NOT NULL,
+        startLongitude DOUBLE NOT NULL,
+        destinationLatitude DOUBLE,
+        destinationLongitude DOUBLE,
+        startTime TIMESTAMP,
+        endTime TIMESTAMP,
+        price DOUBLE,
+        cid integer,
+        FOREIGN KEY(cid) REFERENCES Car 
+);
+
 Drop TABLE InsurancePackage;
 CREATE TABLE InsurancePackage (
         ipid integer  PRIMARY KEY  not null GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
@@ -47,14 +58,14 @@ CREATE TABLE Station (
 );
 Drop TABLE ParkingStation;
 CREATE TABLE ParkingStation (
-        sid integer PRIMARY KEY NOT NULL,
+        sid integer not null PRIMARY KEY  ,
         latitude DOUBLE NOT NULL,
         longitude DOUBLE NOT NULL,
         FOREIGN KEY (sid) REFERENCES Station
 );
 Drop TABLE ChargingStation ;
 CREATE TABLE ChargingStation (
-        sid integer PRIMARY KEY NOT NULL,
+        sid integer not null PRIMARY KEY  ,
         status varchar(10) check (status in ('busy','available')) with default 'available' NOT NULL,
         latitude DOUBLE NOT NULL,
         longitude DOUBLE NOT NULL,
@@ -62,15 +73,15 @@ CREATE TABLE ChargingStation (
 );
 Drop TABLE ParkingSpot;
 CREATE TABLE ParkingSpot (
-        pNumber integer PRIMARY KEY  not null GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
+        pNumber integer   not null GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
         class varchar(7) NOT NULL,
-        sid integer  PRIMARY KEY NOT NULL,
+        sid integer   NOT NULL,
         status varchar(10) check (status in ('busy','available')) with default 'available' NOT NULL,
-        FOREIGN KEY (sid) REFERENCES ParkingStation,
+        FOREIGN KEY (sid) REFERENCES Station,
         PRIMARY KEY (sid, pNumber),
         FOREIGN Key(class ) REFERENCES CarClassInfo
 );
-Drop TABLE CreditCard
+Drop TABLE CreditCard;
 CREATE TABLE CreditCard (
         ccNumber char(16) PRIMARY KEY NOT NULL,
         expirationDate DATE NOT NULL,
@@ -79,7 +90,7 @@ CREATE TABLE CreditCard (
         billingAddress varchar(100) NOT NULL,
         validity varchar(8) check (validity in ('valid','invalid')) with default 'valid'
 );
-Drop TABLE Subscription
+Drop TABLE Subscription;
 CREATE TABLE Subscription (
         subsNumber integer PRIMARY KEY  not null GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
         monthlyPrice DOUBLE NOT NULL,
@@ -94,15 +105,7 @@ Drop TABLE User;
 CREATE TABLE User (
         uid integer PRIMARY KEY  not null GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
         name varchar(50) NOT NULL,
-        email varchar(10) NOT NULL UNIQUE,
+        email varchar(100) NOT NULL UNIQUE,
         ccNumber char(16) NOT NULL,
         FOREIGN KEY (ccNumber) REFERENCES CreditCard
-);
-Drop TABLE CarClassInfo; 
-CREATE TABLE CarClassInfo (
-        class varchar(7) PRIMARY KEY check (class in ('small','big','limo','luxury')) NOT NULL,
-        basePrice DOUBLE check (basePrice > 0),
-        kmPrice Double check (kmPrice > 0),
-        minutePrice Double check (minutePrice > 0),
-        duration TIME check (duration > 0)
 );

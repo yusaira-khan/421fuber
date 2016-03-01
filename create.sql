@@ -49,7 +49,7 @@ CREATE TABLE ParkingStation (
         sid integer PRIMARY KEY NOT NULL,
         latitude DOUBLE NOT NULL,
         longitude DOUBLE NOT NULL,
-        FOREIGN KEY (sid) REFERENCES Station
+        FOREIGN KEY (sid,latitude,longitude) REFERENCES Station
 );
 
 CREATE TABLE ChargingStation (
@@ -57,7 +57,7 @@ CREATE TABLE ChargingStation (
         status varchar(10) check (status in ('busy','available')) with default 'available' NOT NULL,
         latitude DOUBLE NOT NULL,
         longitude DOUBLE NOT NULL,
-        FOREIGN KEY (sid) REFERENCES Station
+        FOREIGN KEY (sid,latitude,longitude) REFERENCES Station
 );
 
 CREATE TABLE ParkingSpot (
