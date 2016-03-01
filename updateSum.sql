@@ -12,8 +12,7 @@ SET salary = salary + salary*5/100
 -- Works
 
 -- delete subscriptiions that have ended
-Delete from Subscription
-	WHERE (CURRENT DATE > endDate);	
+Delete from Subscription 	WHERE (CURRENT DATE > endDate);	
 
 
 
@@ -35,6 +34,6 @@ order by c.chargePercentage, m.dist  fetch first 1 row only;
 inner join ChargingStation h on m.sid = h.sid
 where h.status='available' and c.status='available'
  group by c.chargePercentage,m.dist,c.cid,h.sid
-order by c.chargePercentage, m.dist)
+order by c.chargePercentage, m.dist);
 
 
