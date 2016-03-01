@@ -49,7 +49,7 @@ left outer join Subscription sub on u.uid =sub.uid
 where r.price=null and r.endtime is not null;
 
 --closest cars within 2 km of a ride start point
-SELECT r.rid,c.cid
+SELECT r.rid,c.cid,c.class
    FROM car c inner join ride r on  
    Harvensine(c.latitude,c.longitude,r.startlatitude,r.startlongitude)<=2
    where r.cid = null and (c.status='available') ;
