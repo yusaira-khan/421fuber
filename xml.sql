@@ -10,7 +10,7 @@ CREATE TABLE Take_Ride (
 
 
 INSERT INTO Take_Ride (rid, uid,RequestInfo)
-VALUES(1, 2, "<session><source users=1>initiator</source> <time_accepted>10:00</time_accepted></session>");
+VALUES(1, 2, "<session><source >initiator</source> <space_left></space_left></session>");
 
 INSERT INTO Take_Ride (rid, uid)
 VALUES(2, 1, "<session><source users=1>initiator</source> <time_accepted>10:00</time_accepted></session>");
