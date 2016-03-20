@@ -10,7 +10,7 @@ CREATE TABLE Take_Ride (
 
 
 INSERT INTO Take_Ride (rid, uid,INFO)
-VALUES(1, 2, '<session><source >initiator</source><time_accepted>10:00</time_accepted><date>12-12-2012</date><uid>2</uid></session>');
+VALUES(1, 2, '<session><source >initiator</source><space_left  users="1">1</space_left><time_accepted>10:00</time_accepted><date>12-12-2012</date><uid>2</uid></session>');
 
 INSERT INTO Take_Ride (rid, uid,INFO)
 VALUES(2, 1, '<session><source >initiator</source><space_left  users="1">3</space_left> <time_accepted>11:00</time_accepted><date>12-12-2012</date><uid>1</uid></session>');
@@ -37,5 +37,5 @@ SELECT XMLQUERY ( 'for $d in $INFO/session
 FROM Take_Ride WHERE XMLEXISTS ('$INFO/session[source="splitter"]' );
 
 SELECT XMLQUERY ( 'for $d in $INFO/session 
-			return <full> {$d/rid} </full> ' )
-FROM Take_Ride WHERE XMLEXISTS ('$INFO/session[space_left="0"]' );
+			return <full> {$d} </full> ' )
+FROM Take_Ride WHERE XMLEXISTS ('$INFO/session[space_left=0]' );
