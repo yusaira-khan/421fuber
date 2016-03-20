@@ -1,3 +1,5 @@
+
+-- To take ride we add information that we get from the online request: who created the ride, who split the ride and when the ride split was accepted, and how much space is left in the xml
 drop table take_ride;
 CREATE TABLE Take_Ride (
         rid INTEGER NOT NULL,
@@ -32,10 +34,12 @@ VALUES(5, 3, '<session><source uid="3">initiator</source><space_left rid="5" use
 
 select * from Take_Ride;
 
+--getting the uids of everyone who split the ride
 SELECT XMLQUERY ( 'for $d in $INFO/session/source 
 			return <splitter> {$d/@uid} </splitter> ' )
 FROM Take_Ride WHERE XMLEXISTS ('$INFO/session[source="splitter"]' );
 
+--getting the last acceptance date and time of a ride that is full
 SELECT XMLQUERY ( 'for $d in $INFO/session 
 		return <full> {$d/space_left/@rid} {$d/date}{$d/time_accepted} </full> ' )
 FROM Take_Ride WHERE XMLEXISTS ('$INFO/session[space_left=0]' );
