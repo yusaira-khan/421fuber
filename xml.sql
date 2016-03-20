@@ -10,29 +10,32 @@ CREATE TABLE Take_Ride (
 
 
 INSERT INTO Take_Ride (rid, uid,INFO)
-VALUES(1, 2, '<session><source users="1" space_left="1">initiator</source><time_accepted>10:00</time_accepted><date>12-12-2012</date><uid>2</uid></session>');
+VALUES(1, 2, '<session><source >initiator</source><time_accepted>10:00</time_accepted><date>12-12-2012</date><uid>2</uid></session>');
 
 INSERT INTO Take_Ride (rid, uid,INFO)
-VALUES(2, 1, '<session><source users="1" space_left="3">initiator</source> <time_accepted>11:00</time_accepted><date>12-12-2012</date><uid>1</uid></session>');
+VALUES(2, 1, '<session><source >initiator</source><space_left  users="1">3</space_left> <time_accepted>11:00</time_accepted><date>12-12-2012</date><uid>1</uid></session>');
 
 INSERT INTO Take_Ride (rid, uid,INFO)
-VALUES(2, 3, '<session><source users="2" space_left="2">splitter</source> <time_accepted>11:05</time_accepted><date>12-12-2012</date><uid>3</uid></session>');
+VALUES(2, 3, '<session><source >splitter</source><space_left  users="2">2</space_left> <time_accepted>11:05</time_accepted><date>12-12-2012</date><uid>3</uid></session>');
 
 INSERT INTO Take_Ride (rid, uid,INFO)
-VALUES(3, 5, '<session><source users="1" space_left="3">initiator</source> <time_accepted>12:00</time_accepted><date>12-12-2012</date><uid>5</uid></session>');
+VALUES(3, 5, '<session><source >initiator</source><space_left  users="1">3</space_left> <time_accepted>12:00</time_accepted><date>12-12-2012</date><uid>5</uid></session>');
 
 INSERT INTO Take_Ride (rid, uid,INFO)
-VALUES(4, 4, '<session><source users="1" space_left="1">initiator</source> <time_accepted>12:00</time_accepted><date>12-12-2012</date><uid>4</uid></session>');
+VALUES(4, 4, '<session><source >initiator</source><space_left  users="1">1</space_left> <time_accepted>12:00</time_accepted><date>12-12-2012</date><uid>4</uid></session>');
 
 INSERT INTO Take_Ride (rid, uid,INFO)
-VALUES(4, 2, '<session><source users="2" space_left="0">splitter</source> <time_accepted>12:05</time_accepted><date>12-12-2012</date><uid>2</uid></session>');
+VALUES(4, 2, '<session><source >splitter</source><space_left  users="2">0</space_left> <time_accepted>12:05</time_accepted><date>12-12-2012</date><uid>2</uid></session>');
 
 INSERT INTO Take_Ride (rid, uid,INFO)
-VALUES(5, 3, '<session><source users="1" space_left="1">initiator</source> <time_accepted>13:00</time_accepted><date>12-12-2012</date><uid>3</uid></session>');
+VALUES(5, 3, '<session><source>initiator</source><space_left  users="1">1</space_left> <time_accepted>13:00</time_accepted><date>12-12-2012</date><uid>3</uid></session>');
 
 select * from Take_Ride;
 
 SELECT XMLQUERY ( 'for $d in $INFO/session 
-			where $d/source="splitter"
 			return <splitter> {$d/uid} </splitter> ' )
 FROM Take_Ride WHERE XMLEXISTS ('$INFO/session[source="splitter"]' );
+
+SELECT XMLQUERY ( 'for $d in $INFO/session 
+			return <full> {$d/rid} </full> ' )
+FROM Take_Ride WHERE XMLEXISTS ('$INFO/session[space_left="0"]' );
