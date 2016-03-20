@@ -37,5 +37,5 @@ SELECT XMLQUERY ( 'for $d in $INFO/session/source
 FROM Take_Ride WHERE XMLEXISTS ('$INFO/session[source="splitter"]' );
 
 SELECT XMLQUERY ( 'for $d in $INFO/session 
-		return <full> <ride>{$d/space_left/@rid} <ride> {$d/time_accepted} </full> ' )
+		return <full> {$d/space_left/@rid} {$d/date}{$d/time_accepted} </full> ' )
 FROM Take_Ride WHERE XMLEXISTS ('$INFO/session[space_left=0]' );
